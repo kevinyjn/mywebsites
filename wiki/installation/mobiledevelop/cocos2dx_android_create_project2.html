@@ -1,0 +1,274 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Jining Park</title>
+    <link rel="stylesheet" type="text/css" href="../../styles/style_wiki.css" />
+</head>
+
+<body>
+<div class="main_body" align="center">
+
+<div class="wiki_title">
+    <h2>Cocos2d-x Android 环境搭建与编译</h2>
+</div>
+
+<div class="wiki_content">
+
+<h2><span style="font-family: 微软雅黑;">前言</span></h2>
+<p><span style="font-family: 微软雅黑;">有一段时间没有看cocos2d了，一直计划看一下Android的方面，今天终于有机会看了一下，也有了一些收获，在这里总结一下。之前一篇</span><a href="/?p=80005" target="_blank"><span style="font-family: 微软雅黑;">《cocos2d-x之HelloWorld范例分析(一)》</span></a><span style="font-family: 微软雅黑;">主要是研究了一下cocos2d-x的渲染机制，架构和主要部分的技术实现，这一篇主要是在之前的基础上，研究在Android的实现相关内容，主要包括如下几个部分：</span></p>
+<ul>
+<li><span style="font-family: 微软雅黑;">cocos2d-x Android环境搭建</span> </li>
+<li><span style="font-family: 微软雅黑;">NDK编译</span> </li>
+<li><span style="font-family: 微软雅黑;">JNI交互</span> </li>
+</ul>
+<p><!--more--></p>
+<h2><span style="font-family: 微软雅黑;">cocos2d-x Android环境搭建</span></h2>
+<p><span style="font-family: 微软雅黑;">cocos2d-x环境搭建比较简单，但是小问题还是不少，我尽量都涵盖的全面一些。</span></p>
+<ol>
+<li><span style="font-family: 微软雅黑;">下载软件        <br /></span><a href="http://cygwin.com/install.html" target="_blank"><span style="font-family: 微软雅黑;">cygwin</span></a><span style="font-family: 微软雅黑;">、</span><a href="https://developer.android.com/sdk/ndk/index.html" target="_blank"><span style="font-family: 微软雅黑;">NDK(ADT)</span></a><span style="font-family: 微软雅黑;">:C++相关        <br />如果之前没有Android开发环境，还需要</span><a href="https://developer.android.com/sdk/installing.html" target="_blank"><span style="font-family: 微软雅黑;">Android SDK</span></a><span style="font-family: 微软雅黑;">，Eclipse        <br /></span><a href="http://www.cocos2d-x.org/projects/cocos2d-x/wiki/Download" target="_blank"><span style="font-family: 微软雅黑;">cocos2d-x源码</span></a> <br /><span style="font-family: 微软雅黑;">我的环境为ndk r7，cygwin1.7，Android SDK为2.2和3.0.另外,我是通过真机调试,在模拟器上不行,估计还是我T410显卡的问题.</span> </li>
+<li><span style="font-family: 微软雅黑;">安装cygwin，在cygwin文件进行路径设置        <br />在cygwin\home\Administrator的.bash_profile中添加如下代码</span>
+<div id="codeSnippetWrapper" style="font-size: 8pt; margin: 20px 0px 10px; overflow: auto; width: 97.5%; cursor: text; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; max-height: 200px; border: silver 1px solid; padding: 4px;">
+<div id="codeSnippet" style="font-size: 8pt; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;">
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum1" style="color: #606060;">   1:</span> ANDROID_NDK_ROOT=/cygdrive/e/ADT/android-ndk-r7c</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum2" style="color: #606060;">   2:</span> export ANDROID_NDK_ROOT</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum3" style="color: #606060;">   3:</span> NDK_ROOT=/cygdrive/e/ADT/android-ndk-r7c</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum4" style="color: #606060;">   4:</span> export NDK_ROOT</span></pre>
+<!--CRLF--></div>
+</div>
+</li>
+<li><span style="font-family: 微软雅黑;">将libgnustl_static.a从NDK中的android-ndk-r7c\sources\cxx-stl\gnu-libstdc++\libs\armeabi拷贝至cocos2d-1.0.1-x-0.13.0-beta\HelloWorld\android\obj\local\armeabi，这个从解决方案上看应该是stl的引用不一致导致的问题，但编译中会报错&ldquo;png.a can not find&rdquo;，但是path路径确实没什么问题，所以比较坑爹，总之这样就搞定了，我也没怎么深究。</span> </li>
+<li><span style="font-family: 微软雅黑;">进入cocos2d-1.0.1-x-0.13.0-beta\HelloWorld\android目录下修改如下内容到指定路径</span>
+<div id="codeSnippetWrapper" style="font-size: 8pt; margin: 20px 0px 10px; overflow: auto; width: 97.5%; cursor: text; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; max-height: 200px; border: silver 1px solid; padding: 4px;">
+<div id="codeSnippet" style="font-size: 8pt; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;">
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum1" style="color: #606060;">   1:</span> NDK_ROOT_LOCAL=/cygdrive/e/ADT/android-ndk-r7c</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum2" style="color: #606060;">   2:</span> COCOS2DX_ROOT_LOCAL=/cygdrive/f/cocos2d-1.0.1-x-0.13.0-beta</span></pre>
+<!--CRLF--></div>
+</div>
+</li>
+<li><span style="font-family: 微软雅黑;">cygwin中进入cocos2d-1.0.1-x-0.13.0-beta\HelloWorld\android目录下，执行./build_native.sh,编译C++，JNI接口，供Android Java使用，如果成功，在在libs中生成libhelloworld.so动态库，我们都是为了它做了这么多工作</span> </li>
+<li><span style="font-family: 微软雅黑;">在Eclipse中导入cocos2d-1.0.1-x-0.13.0-beta\HelloWorld\android工程，熟悉Android的一看就发现，其实这本身就是一个Java工程，我们刚才的操作只是其中jni的部分，供Java下面的调用实现而已</span> </li>
+<li><span style="font-family: 微软雅黑;">Eclipse中执行Build Project，生成R.java</span> </li>
+<li><span style="font-family: 微软雅黑;">Run</span> </li>
+</ol> <ol><span style="font-family: 微软雅黑;">&nbsp;</span></ol> <ol><span style="font-family: 微软雅黑;">&nbsp;</span></ol>
+<h2><span style="font-family: 微软雅黑;">Make</span></h2>
+<p><span style="font-family: 微软雅黑;">ndk的Make是在GNU的Make的基础上的一种封装，下面我们来分析一下./build_native.sh都做了哪些操作。简单说主要是资源拷贝和代码编译。</span></p>
+<p><span style="font-family: 微软雅黑;">资源拷贝在我的cygwin里面发现有问题，拷贝后的文件是错误的，且不能删除我没有深究，自己手动拷贝了一下。和shell一致，很容易理解，不再深究。</span></p>
+<p><span style="font-family: 微软雅黑;">ndk-build编译HelloWorld工程，编译jni文件夹下面的Android.mk,和makefile基本相似，指定需要编译的文件，include路径，依赖工程cocos2dx_static，进行编译，例如HelloWorld的makefile大致如下：</span></p>
+<div id="codeSnippetWrapper" style="font-size: 8pt; margin: 20px 0px 10px; overflow: auto; width: 97.5%; cursor: text; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; max-height: 200px; border: silver 1px solid; padding: 4px;">
+<div id="codeSnippet" style="font-size: 8pt; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;">
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum1" style="color: #606060;">   1:</span> LOCAL_PATH := $(call my-dir)</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum2" style="color: #606060;">   2:</span> include $(CLEAR_VARS)</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum3" style="color: #606060;">   3:</span> LOCAL_MODULE := helloworld_shared</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum4" style="color: #606060;">   4:</span> LOCAL_MODULE_FILENAME := libhelloworld</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum5" style="color: #606060;">   5:</span> LOCAL_SRC_FILES := helloworld/main.cpp \</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum6" style="color: #606060;">   6:</span>                    ../../Classes/AppDelegate.cpp \</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum7" style="color: #606060;">   7:</span>                    ../../Classes/HelloWorldScene.cpp</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum8" style="color: #606060;">   8:</span> LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum9" style="color: #606060;">   9:</span> LOCAL_WHOLE_STATIC_LIBRARIES := cocos2dx_static</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum10" style="color: #606060;">  10:</span> include $(BUILD_SHARED_LIBRARY)</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum11" style="color: #606060;">  11:</span> $(call import-module,cocos2dx)</span></pre>
+<!--CRLF--></div>
+</div>
+<p><span style="font-family: 微软雅黑;">LOCAL_PATH := $(call my-dir)：指定当前路径为为LOCAL_PATH </span></p>
+<p><span style="font-family: 微软雅黑;">include $(CLEAR_VARS)：清空除LOCAL_PATH之外的其他环境变量的干扰</span></p>
+<p><span style="font-family: 微软雅黑;">LOCAL_MODULE&amp;LOCAL_MODULE_FILENAME：模块名称&amp;生成库名称</span></p>
+<p><span style="font-family: 微软雅黑;">LOCAL_SRC_FILES：编译的C++ Source</span></p>
+<p><span style="font-family: 微软雅黑;">LOCAL_WHOLE_STATIC_LIBRARIES：依赖的静态库</span></p>
+<p><span style="font-family: 微软雅黑;">BUILD_SHARED_LIBRARY:生成的为共享库。因为Android的动态库都为JNI所用，所以称为共享库，而静态库只为其他C++库所用。</span></p>
+<p><span style="font-family: 微软雅黑;">$(call import-module,&lt;name&gt;)：通过NDK_MODULE_PATH环境变量引用的模块&lt;name&gt;的目录列表，并且将其自动包含到Android.mk中</span></p>
+<p><span style="font-family: 微软雅黑;">这样，一个编译环境的include，library，target基本指定，则编译出最终的目标文件，和makefile思路上没什么区别，另外这里需要编译出cocos2dx.a，静态库，是通过cocos2d文件夹中的make编译而成，这个脚本则要复杂一些，不过思想并无不同。更多NDK Make可以参考：《</span><a href="http://blog.csdn.net/zhandoushi1982/article/details/5316669" target="_blank"><span style="font-family: 微软雅黑;">Android Make</span></a><span style="font-family: 微软雅黑;">》</span></p>
+<h2><span style="font-family: 微软雅黑;">JNI交互</span></h2>
+<p><span style="font-family: 微软雅黑;">C++接口封装完毕后，我们就开始看一下Java代码，了解一下最终实现的流程和效果，Java代码如下：</span></p>
+<p><span style="font-family: 微软雅黑;"><img style="display: block; float: none; margin-left: auto; margin-right: auto;" src="http://fmn.rrimg.com/fmn060/20120505/1425/original_8FWu_316f00000a6a1260.jpg" alt="" /> </span></p>
+<p><span style="font-family: 微软雅黑;">Java层的框架也很简单，这里并没有多Accelerometer和Music、Sound等进行分析，只是对涉及到显示相关的进行分析。Java层面流程如下：</span></p>
+<p><span style="font-family: 微软雅黑;"><img style="display: block; float: none; margin-left: auto; margin-right: auto;" src="http://fmn.rrimg.com/fmn066/20120505/1550/large_hbDn_27b500000139125d.gif" alt="" /> </span></p>
+<p><span style="font-family: 微软雅黑;">如上，如果熟悉Android界面开发，可以从基类了解到Java层面是通过Activity、GLSuffaceView来进行的显示。这里不详细介绍，如果有兴趣，可以看一下《</span><a href="http://blog.csdn.net/xiaominghimi/article/details/6089594" target="_blank"><span style="font-family: 微软雅黑;">剖析游戏开发用view还是surfaceView</span></a><span style="font-family: 微软雅黑;">》,View类似传统的二维静态界面，数据驱动显示，而SurfaceView则类似三维机制，实时渲染。因为Cocos2d是OpenGL的，这也好解释。</span></p>
+<p><span style="font-family: 微软雅黑;">对于整个框架其实要说的也很多，不过我对Java还不太了解，所以有些东西看的不一定透，也难免有一些问题。</span></p>
+<h3><strong><span style="font-family: 微软雅黑;">Renderer</span></strong></h3>
+<p><span style="font-family: 微软雅黑;">Renderer类负责每一帧的渲染驱动，调用步骤如图里面的1和2，在2中调用jni里面的nativeRender实现一帧的渲染，而GLSurfaceView则负责UI交互的监听。</span></p>
+<p><span style="font-family: 微软雅黑;">这种机制的好处是在Java中Renderer渲染器是独立线程调用，因此和UI之间没有交互性，这样既保证了用户体验（用户的事件通过GLSurfaceView监听，最终通过Renderer传递至C++层面来响应），也保证了渲染过程的抗干扰，依旧通过C++层面进行渲染。，整个显示过程用到的jni封装主要如下：</span></p>
+<div id="codeSnippetWrapper" style="font-size: 8pt; margin: 20px 0px 10px; overflow: auto; width: 97.5%; cursor: text; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; max-height: 200px; border: silver 1px solid; padding: 4px;">
+<div id="codeSnippet" style="font-size: 8pt; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;">
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum1" style="color: #606060;">   1:</span> <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">native</span> <span style="color: #0000ff;">void</span> nativeTouchesBegin(<span style="color: #0000ff;">int</span> id, <span style="color: #0000ff;">float</span> x, <span style="color: #0000ff;">float</span> y);</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum2" style="color: #606060;">   2:</span> <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">native</span> <span style="color: #0000ff;">void</span> nativeTouchesEnd(<span style="color: #0000ff;">int</span> id, <span style="color: #0000ff;">float</span> x, <span style="color: #0000ff;">float</span> y);</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum3" style="color: #606060;">   3:</span> <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">native</span> <span style="color: #0000ff;">void</span> nativeTouchesMove(<span style="color: #0000ff;">int</span>[] id, <span style="color: #0000ff;">float</span>[] x, <span style="color: #0000ff;">float</span>[] y);</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum4" style="color: #606060;">   4:</span> <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">native</span> <span style="color: #0000ff;">void</span> nativeTouchesCancel(<span style="color: #0000ff;">int</span>[] id, <span style="color: #0000ff;">float</span>[] x, <span style="color: #0000ff;">float</span>[] y);</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum5" style="color: #606060;">   5:</span> <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">native</span> <span style="color: #0000ff;">boolean</span> nativeKeyDown(<span style="color: #0000ff;">int</span> keyCode);</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum6" style="color: #606060;">   6:</span> <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">native</span> <span style="color: #0000ff;">void</span> nativeRender();</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum7" style="color: #606060;">   7:</span> <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">native</span> <span style="color: #0000ff;">void</span> nativeInit(<span style="color: #0000ff;">int</span> w, <span style="color: #0000ff;">int</span> h);</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum8" style="color: #606060;">   8:</span> <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">native</span> <span style="color: #0000ff;">void</span> nativeOnPause();</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum9" style="color: #606060;">   9:</span> <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">native</span> <span style="color: #0000ff;">void</span> nativeOnResume();</span></pre>
+<!--CRLF--></div>
+</div>
+<h3><strong><span style="font-family: 微软雅黑;">jni封装</span></strong></h3>
+<p><span style="font-family: 微软雅黑;">jni的封装主要有两部分，一个是cocos2d自己的JNI封装，这部分封装主要是为了在Java中调用cocos2d的jni接口，一个是HelloWorld中自己的jni接口封装。这一块本来是我比较感兴趣的地方，因为jni封装还是挺繁琐的一件事情，最后发现cocos2d在本质上也没有什么区别，麻烦的还是得封装。第二点，cocos2d主要是游戏引擎，所以基本所有功能都是由C++层面来实现，一帧的渲染，事件的处理，而Java层主要负责逻辑处理，最终通过jni调用C++接口来实现。第三点来说，cocos2d本身封装的还是很简洁的，这点我觉得做的还是很优雅的，在设计这块，是以Java的逻辑为依据来进行划分，我觉得这个很可取，虽然cocos2d是C++做起来的，但是并没有为了保证各个平台的一致性而强迫接口的一致，而是在jni层按照SDK在具体平台的应用特点来进行封装，这样减低了实现难度，提高了代码的易用度，牺牲就是应用平台接口的局部不一致性。jni层面主要是事件传递和窗口渲染部分的接口封装，针对游戏开发者而言，最核心的部分都可以在Windows平台下完成，然后在Android部分完成特有事件的传递，渲染部分直接采用cocos2d给出的标准范例实现即可，大大简化了开发者自己封装jni的工作。</span></p>
+<h3><strong><span style="font-family: 微软雅黑;">窗口绑定</span></strong></h3>
+<p><span style="font-family: 微软雅黑;">窗口绑定我理解的并不太透彻，首先，我认为CCEGLView_Android只是一个虚的窗口，并没有实质功能，只是为了便于架构理解。</span></p>
+<div id="codeSnippetWrapper" style="font-size: 8pt; margin: 20px 0px 10px; overflow: auto; width: 97.5%; cursor: text; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; max-height: 200px; border: silver 1px solid; padding: 4px;">
+<div id="codeSnippet" style="font-size: 8pt; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;">
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum1" style="color: #606060;">   1:</span> <span style="color: #0000ff;">void</span> Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeInit(JNIEnv*  env, jobject thiz, jint w, jint h)</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum2" style="color: #606060;">   2:</span> {</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum3" style="color: #606060;">   3:</span>     <span style="color: #0000ff;">if</span> (!cocos2d::CCDirector::sharedDirector()-&gt;getOpenGLView())</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum4" style="color: #606060;">   4:</span>     {</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum5" style="color: #606060;">   5:</span>         cocos2d::CCEGLView *view = &amp;cocos2d::CCEGLView::sharedOpenGLView();</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum6" style="color: #606060;">   6:</span>         view-&gt;setFrameWidthAndHeight(w, h);</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum7" style="color: #606060;">   7:</span>         <span style="color: #008000;">// if you want to run in WVGA with HVGA resource, set it</span></span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum8" style="color: #606060;">   8:</span>         <span style="color: #008000;">// view-&gt;create(480, 320);  Please change it to (320, 480) if you're in portrait mode.</span></span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum9" style="color: #606060;">   9:</span>         cocos2d::CCDirector::sharedDirector()-&gt;setOpenGLView(view);</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum10" style="color: #606060;">  10:</span>&nbsp; </span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum11" style="color: #606060;">  11:</span>         AppDelegate *pAppDelegate = <span style="color: #0000ff;">new</span> AppDelegate();</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum12" style="color: #606060;">  12:</span>         cocos2d::CCApplication::sharedApplication().run();</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum13" style="color: #606060;">  13:</span>     }</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum14" style="color: #606060;">  14:</span> }</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum15" style="color: #606060;">  15:</span>&nbsp; </span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum16" style="color: #606060;">  16:</span> <span style="color: #0000ff;">void</span> Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeRender(JNIEnv* env)</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum17" style="color: #606060;">  17:</span> {</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum18" style="color: #606060;">  18:</span>     cocos2d::CCDirector::sharedDirector()-&gt;mainLoop();</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum19" style="color: #606060;">  19:</span> }</span></pre>
+<!--CRLF--></div>
+</div>
+<p>&nbsp;</p>
+<p><span style="font-family: 微软雅黑;">函数一是Java层调用onSurfaceCreated时调用函数，用来获取GLView窗口，用来下一步的渲染，而这个View窗口并没有类似Windows下的handle绑定，而接下来函数二是Java中onDrawFrame渲染每一帧时进行调用，最终调用底层的Director渲染，完成一帧绘制（详细内容可参考</span><a href="/?p=80005" target="_blank"><span style="font-family: 微软雅黑;">《cocos2d-x之HelloWorld范例分析(一)》</span></a><span style="font-family: 微软雅黑;">）。</span></p>
+<p><span style="font-family: 微软雅黑;">怎么来理解这种窗口绑定方式，保证我现在调用的gl函数，就能够绘制在窗口呢，通篇没有一个类似的handle从Java传递给JNI，通篇C++层面的View也只是一个只有Width和Height属性的结构体，所以我理解的是GLSurfaceView.Renderer默认在自己的线程中进行了封装，已经自己完成了和OpenGL的绑定。这个我觉得应该是靠谱的吧，而且自己来实时的每一帧渲染，下面的就不管里，你自己愿意调Java的接口也行，自己调gl的渲染也可以。这样也挺好的，都不用我顾虑这个事情了，只要给我高度宽度知道位置信息，我直接渲染。</span></p>
+<h3><strong><span style="font-family: 微软雅黑;">文字</span></strong></h3>
+<p><span style="font-family: 微软雅黑;">其他图形图像的绘制，都是和系统无关的。整个的渲染过程，也是跨平台的，一个平台的整合，主要是环境搭建、不同语言之间的消息传递、View的映射这些，前面也都阐述了，只是文字有一定的特殊，在Windows下使用CDC，在Linux是Freetype，在Android下如何实现？我觉得cocos2d实现思路也是不错的：C++通过JNI在Java层绘制，生成一张BitMap给C++，然后贴图完成。这个优点是简单，缺点就是如果文字太多的话，效率损失还是有的，其实我觉得如果有机会，还是用Freetype来画应该也可以尝试一下。</span></p>
+<p><span style="font-family: 微软雅黑;">当然，也新学了一招，C++调用Java的方式，在jni里面也提供了，呵呵，代码在下面贴一下：</span></p>
+<div id="codeSnippetWrapper" style="font-size: 8pt; margin: 20px 0px 10px; overflow: auto; width: 97.5%; cursor: text; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; max-height: 200px; border: silver 1px solid; padding: 4px;">
+<div id="codeSnippet" style="font-size: 8pt; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;">
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum1" style="color: #606060;">   1:</span> <span style="color: #0000ff;">bool</span> getBitmapFromJava(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">char</span> *text, <span style="color: #0000ff;">int</span> nWidth, <span style="color: #0000ff;">int</span> nHeight, CCImage::ETextAlign eAlignMask, <span style="color: #0000ff;">const</span> <span style="color: #0000ff;">char</span> * pFontName, <span style="color: #0000ff;">float</span> fontSize)</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum2" style="color: #606060;">   2:</span> {</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum3" style="color: #606060;">   3:</span>     JniMethodInfo methodInfo;</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum4" style="color: #606060;">   4:</span>     <span style="color: #0000ff;">if</span> (! JniHelper::getStaticMethodInfo(methodInfo, <span style="color: #006080;">"org/cocos2dx/lib/Cocos2dxBitmap"</span>, <span style="color: #006080;">"createTextBitmap"</span>, </span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum5" style="color: #606060;">   5:</span>         <span style="color: #006080;">"(Ljava/lang/String;Ljava/lang/String;IIII)V"</span>))</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum6" style="color: #606060;">   6:</span>     {</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum7" style="color: #606060;">   7:</span>         CCLOG(<span style="color: #006080;">"%s %d: error to get methodInfo"</span>, __FILE__, __LINE__);</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum8" style="color: #606060;">   8:</span>         <span style="color: #0000ff;">return</span> false;</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum9" style="color: #606060;">   9:</span>     }</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum10" style="color: #606060;">  10:</span>&nbsp; </span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum11" style="color: #606060;">  11:</span>     <span style="color: #008000;">/**create bitmap</span></span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum12" style="color: #606060;">  12:</span> <span style="color: #008000;">     * this method call Cococs2dx.createBitmap()(java code) to create the bitmap, the java code</span></span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum13" style="color: #606060;">  13:</span> <span style="color: #008000;">     * will call Java_org_cocos2dx_lib_Cocos2dxBitmap_nativeInitBitmapDC() to init the width, height</span></span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum14" style="color: #606060;">  14:</span> <span style="color: #008000;">     * and data.</span></span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum15" style="color: #606060;">  15:</span> <span style="color: #008000;">     * use this appoach to decrease the jni call number</span></span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum16" style="color: #606060;">  16:</span> <span style="color: #008000;">    */</span></span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum17" style="color: #606060;">  17:</span>     jstring jstrText = methodInfo.env-&gt;NewStringUTF(text);</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum18" style="color: #606060;">  18:</span>     jstring jstrFont = methodInfo.env-&gt;NewStringUTF(pFontName);</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum19" style="color: #606060;">  19:</span>&nbsp; </span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum20" style="color: #606060;">  20:</span>     methodInfo.env-&gt;CallStaticVoidMethod(methodInfo.classID, methodInfo.methodID, jstrText, </span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum21" style="color: #606060;">  21:</span>         jstrFont, (<span style="color: #0000ff;">int</span>)fontSize, eAlignMask, nWidth, nHeight);</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum22" style="color: #606060;">  22:</span>&nbsp; </span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum23" style="color: #606060;">  23:</span>     methodInfo.env-&gt;DeleteLocalRef(jstrText);</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum24" style="color: #606060;">  24:</span>     methodInfo.env-&gt;DeleteLocalRef(jstrFont);</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum25" style="color: #606060;">  25:</span>     methodInfo.env-&gt;DeleteLocalRef(methodInfo.classID);</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum26" style="color: #606060;">  26:</span>&nbsp; </span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum27" style="color: #606060;">  27:</span>     <span style="color: #0000ff;">return</span> true;</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum28" style="color: #606060;">  28:</span> }</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum29" style="color: #606060;">  29:</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">bool</span> getStaticMethodInfo_(cocos2d::JniMethodInfo &amp;methodinfo, <span style="color: #0000ff;">const</span> <span style="color: #0000ff;">char</span> *className, <span style="color: #0000ff;">const</span> <span style="color: #0000ff;">char</span> *methodName, <span style="color: #0000ff;">const</span> <span style="color: #0000ff;">char</span> *paramCode)</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum30" style="color: #606060;">  30:</span> {</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum31" style="color: #606060;">  31:</span>     jmethodID methodID = 0;</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum32" style="color: #606060;">  32:</span>     JNIEnv *pEnv = 0;</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum33" style="color: #606060;">  33:</span>     <span style="color: #0000ff;">if</span> (! getEnv(&amp;pEnv))</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum34" style="color: #606060;">  34:</span>     {</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum35" style="color: #606060;">  35:</span>         <span style="color: #0000ff;">break</span>;</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum36" style="color: #606060;">  36:</span>     }</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum37" style="color: #606060;">  37:</span>&nbsp; </span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum38" style="color: #606060;">  38:</span>     jclass classID = getClassID_(className, pEnv);</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum39" style="color: #606060;">  39:</span>&nbsp; </span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: #f4f4f4; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum40" style="color: #606060;">  40:</span>     methodID = pEnv-&gt;GetStaticMethodID(classID, methodName, paramCode);</span></pre>
+<!--CRLF-->
+<pre style="font-size: 8pt; margin: 0em; overflow: visible; width: 100%; color: black; direction: ltr; line-height: 12pt; font-family: 'Courier New', courier, monospace; background-color: white; text-align: left; border-style: none; padding: 0px;"><span style="font-family: 微软雅黑;"><span id="lnum41" style="color: #606060;">  41:</span> }</span></pre>
+<!--CRLF--></div>
+</div>
+<p>&nbsp;</p>
+<p><span style="font-family: 微软雅黑;">参照里面的注释,C++驱动Java实现绘制,Java完成绘制后,调用Java_org_cocos2dx_lib_Cocos2dxBitmap_nativeInitBitmapDC接口,实现内存的拷贝,而s_BmpDC中的m_pData用来保存,进行下一步的纹理贴图,完成整改流程的传递.</span></p>
+<h2><span style="font-family: 微软雅黑;">总结</span></h2>
+<p><span style="font-family: 微软雅黑;">介绍完毕,整个过程中,cocos2d使用的技术并不神秘,主要是一个熟悉的过程.最值得称赞的是JNI封装的比较使用,本身做游戏开发,基本所有功能都会在C++中封闭实现,只需要提供一个规范的Java外壳就可以,既跨平台有高效.另外,就是cocos2d对各个平台的语言取舍,哪些用Java方便,哪些用C++ 保持平台一致,都做的还是很合理的.</span></p>
+    
+</div>
+
+</div>
+<!-- Content end -->
+
+</div>
+</body>
+</html>

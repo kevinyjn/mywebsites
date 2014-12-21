@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Jining Park</title>
+    <link rel="stylesheet" type="text/css" href="../../styles/style_wiki.css" />
+</head>
+
+<body>
+<div class="main_body" align="center">
+
+<div class="wiki_title">
+    <h2>Cocos2d-x 开发 Windows 7 Android 平台环境搭建</h2>
+</div>
+
+<div class="wiki_content">
+    <h4>Android 平台工程创建</h4>
+    <p class="subject1">1. Android SDK+NDK 安装</p>
+    <p class="subject2">1) 安装 java jdk （如果已经安装好了，跳过此步）</p>
+    <p>进入 <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank">Java SE Download Page</a>下载 jdk7u9 根据系统是32位还是64位选择 x86 或者 x64。</p>
+    <p>安装后，配置环境变量：</p>
+    <p>新建环境变量：JAVA_HOME 值为：D:\Program Files\Java\jdk1.7.0</p>
+    <p>新建环境变量：CLASSPATH&nbsp; 值为：.;%JAVA_HOME%\lib;（注意：点号表示当前目录，不能省略）</p>
+    <p>在系统变量Path的值的前面加入以下内容：%JAVA_HOME%\bin;(注意:这里的分号不能省略)到这里，JDK安装完毕。&nbsp;</p>
+    <p>单击&ldquo;开始&rdquo;&mdash;&gt;&ldquo;运行&rdquo;&mdash;&gt;输入：cmd命令，在CMD窗口中输入：java -version&nbsp; <br />出现如下界面，就表示安装成功： </p>
+    <p><img style="background-image: none; margin: 0px; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border-width: 0px;" title="wps_clip_image-32698" src="../../images/installation/mobilephone/cocos2dx_android_install/20120627223615727.png" alt="wps_clip_image-32698" width="540" height="126" border="0" /></p>
+    <p class="subject2">2) 下载eclipse</p>
+    <p>进入以下页面：</p>
+    <p><a href="http://www.eclipse.org/downloads/packages/">http://www.eclipse.org/downloads/packages/</a></p>
+    <p><img style="background-image: none; margin: 0px; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border-width: 0px;" title="wps_clip_image-1383" src="../../images/installation/mobilephone/cocos2dx_android_install/201206272236178035.png" alt="wps_clip_image-1383" width="555" height="81" border="0" /></p>
+    <p>根据自己的系统选择下载，解压后直接打开即可。</p>
+    <p class="subject2">3) 安装android sdk和NDK</p>
+    <p>进入以下页面<a href="http://developer.android.com/sdk/index.html">http://developer.android.com/sdk/index.html</a></p>
+    <p><img style="background-image: none; margin: 0px; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border-width: 0px;" title="wps_clip_image-32066" src="../../images/installation/mobilephone/cocos2dx_android_install/201206272236191057.png" alt="wps_clip_image-32066" width="555" height="194" border="0" /></p>
+    <p>或直接复制此地址下载：<a href="http://dl.google.com/android/installer_r21-windows.exe">http://dl.google.com/android/installer_r21-windows.exe</a></p>
+    <p>打开installer_r21-windows.exe</p>
+    <p>安装时会检查jdk安装情况，如果没安装成功会失败的。</p>
+    <p>然后运行SDK Manager.exe 进行更新sdk（建议根据需要下载对应版本的sdk）。</p>
+    <p><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="wps_clip_image-13441" src="../../images/installation/mobilephone/cocos2dx_android_install/20120627223630294.png" alt="wps_clip_image-13441" width="538" height="381" border="0" /></p>
+    <p>点解install packages。完成后，为了方便，也配置下环境变量</p>
+    <p>新建环境变量：ANDROID_SDK 值为：G:\Android SDK\platforms;G:\Android SDK\tools（这个是SDK存放的位置）</p>
+    <p>在系统PATH环境变量种加入：%ANDROID_SDK%</p>
+    <p>单击&ldquo;开始&rdquo;&mdash;&gt;&ldquo;运行&rdquo;&mdash;&gt;输入：cmd命令，在CMD窗口中输入：adb -h</p>
+    <p><img style="background-image: none; margin: 0px; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border-width: 0px;" title="wps_clip_image-17920" src="../../images/installation/mobilephone/cocos2dx_android_install/201206272236311473.png" alt="wps_clip_image-17920" width="555" height="242" border="0" /></p>
+    <p>进入<a href="http://developer.android.com/tools/sdk/ndk/index.html">http://developer.android.com/tools/sdk/ndk/index.html</a> 或<a href="http://dl.google.com/android/ndk/android-ndk-r8-windows.zip">点击直接下载</a></p>
+    <p>下载解压到E:\android-ndk-r8</p>
+    <p><img style="background-image: none; margin: 0px; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border-width: 0px;" title="wps_clip_image-28863" src="../../images/installation/mobilephone/cocos2dx_android_install/20120627223641370.png" alt="wps_clip_image-28863" width="555" height="368" border="0" /></p>
+    <p>Android NDK包含build、docs、samples、sources、GNUmakefile、ndk-build、ndk-gdb及readme等内容。 </p>
+    <p class="subject1">2. Cygwin安装</p>
+    <p>由于NDK开发大都涉及到C/C++在GCC环境下编译、运行，所以在Windows环境下，需要模拟Linux模拟编译环境，下载地址：</p>
+    <p><a href="http://www.cygwin.com/">http://www.cygwin.com/</a></p>
+    <p>下载后是个setup.exe文件，使用过程如下：</p>
+    <p>第一步：运行setup程序，第一步图略，直接点击Next进入下一步。</p>
+    <p>第二步：选择安装方式，第一次可以采用Direct Connection在线下载安装，如有现成的离线包，可以选择离线安装（Install from Local Directory）。</p>
+    <p>第三步：选择安装目录，比如C:\Cygwin，注意此目录是指Cygwin最终的安装目录，不是下载文件暂存目录。</p>
+    <p><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="wps_clip_image-20365" src="../../images/installation/mobilephone/cocos2dx_android_install/201206272236565053.png" alt="wps_clip_image-20365" width="585" height="428" border="0" /></p>
+    <p>第四步：设置本地包暂存路径</p>
+    <p>暂存目录默认是放到setup.exe的同级目录下，下载后名字类似ftp%3a%2f%2fcygwin.mirrors.pair.com%2f这样格式。</p>
+    <p><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="wps_clip_image-4071" src="../../images/installation/mobilephone/cocos2dx_android_install/201206272237076699.png" alt="wps_clip_image-4071" width="585" height="427" border="0" /></p>
+    <p>第五步：设置网络连接方式</p>
+    <p><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="wps_clip_image-17795" src="../../images/installation/mobilephone/cocos2dx_android_install/201206272237189316.png" alt="wps_clip_image-17795" width="612" height="447" border="0" /></p>
+    <p>第六步：选择下载站点地址</p>
+    <p>起初尝试几个看哪个速度快就用哪个地址（如果感觉不快就点取消，再次来过）。</p>
+    <p><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="wps_clip_image-25446" src="../../images/installation/mobilephone/cocos2dx_android_install/201206272237301094.png" alt="wps_clip_image-25446" width="615" height="449" border="0" /></p>
+    <p>第七步：等待加载安装项载入，选择安装项</p>
+    <p>我们编译NDK，在默认设置下，只需选择Devel（点击列表中Devel，将后面的Default改为Install，图中箭头所示），其它均为默认状态。(其实NDK需要的不多，主要autoconf2.1、automake1.10、binutils、gcc-core、gcc- , g++、gcc4-core、gcc4-g++、gdb、pcre、pcre-devel、gawk、make )</p>
+    <p><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="wps_clip_image-9612" src="../../images/installation/mobilephone/cocos2dx_android_install/201206272237359670.png" alt="wps_clip_image-9612" width="607" height="444" border="0" /></p>
+    <p>第八步：等待下载完成</p>
+    <p>下载完成时间决定于你选择的安装包数量及网络连接速度，比如按照本文默认的选择方式，可能需要2-3个小时（视网速而定），下载后压缩包约1.2G，下载完成后会自动安装到上文设置的安装目录。</p>
+    <p><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="wps_clip_image-17368" src="../../images/installation/mobilephone/cocos2dx_android_install/201206272237413155.png" alt="wps_clip_image-17368" width="595" height="435" border="0" /></p>
+    <p>提醒：第一次下载完成后，最好把下载的包目录做个备份，下次安装同样的环境可以直接使用离线安装方式（第二步中选择本地安装）。</p>
+    <p>运行cygwin，在弹出的命令行窗口输入：cygcheck -c cygwin命令，会打印出当前cygwin的版本和运行状态，如果status是ok的话，则cygwin运行正常。</p>
+    <p>然后依次输入gcc &ndash;v，g++&nbsp; --version，make &ndash;version，gdb &ndash;version进行测试，(注意空格和-)如果都打印出版本信息和一些描述信息，这说明cygwin安装成功了。</p>
+    <p class="subject1">3. 安装ADT和配置Cygwin</p>
+    <p class="subject2">1) 安装android 开发插件</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp; (1)打开Eclipse, 在菜单栏上选择 help-&gt;Install New SoftWare 出现如下界面:</p>
+    <p><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="wps_clip_image-21032" src="../../images/installation/mobilephone/cocos2dx_android_install/201206272237443452.png" alt="wps_clip_image-21032" width="565" height="433" border="0" /></p>
+    <p>&nbsp;&nbsp;&nbsp; 点击 Add按钮,出现如下界面</p>
+    <p><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="wps_clip_image-25935" src="../../images/installation/mobilephone/cocos2dx_android_install/201206272237463334.png" alt="wps_clip_image-25935" width="520" height="218" border="0" /></p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp; 输入网址: <a href="https://dl-ssl.google.com/android/eclipse/">https://dl-ssl.google.com/android/eclipse/</a>&nbsp;&nbsp;&nbsp; (如果出错，请将https改成http)</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp; 名称: Android (这里可以自定义)</p>
+    <p>&nbsp;&nbsp; 点击OK，将出现如下界面</p>
+    <p><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="wps_clip_image-17538" src="../../images/installation/mobilephone/cocos2dx_android_install/201206272237536635.png" alt="wps_clip_image-17538" width="531" height="474" border="0" /></p>
+    <p>全部选中。</p>
+    <p>点击 Next按钮 ，出现如下界面:</p>
+    <p><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="wps_clip_image-9249" src="../../images/installation/mobilephone/cocos2dx_android_install/201206272237592180.png" alt="wps_clip_image-9249" width="514" height="460" border="0" /></p>
+    <p>点击Next按钮，出现如下界面:</p>
+    <p><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="wps_clip_image-30732" src="../../images/installation/mobilephone/cocos2dx_android_install/201206272238059842.png" alt="wps_clip_image-30732" width="507" height="454" border="0" /></p>
+    <p>选择 I accept the terms of the license agreements&nbsp;&nbsp; 点击Next,进入安装插件界面</p>
+    <p><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="wps_clip_image-9380" src="../../images/installation/mobilephone/cocos2dx_android_install/20120627223814799.png" alt="wps_clip_image-9380" width="453" height="361" border="0" /></p>
+    <p>安装完成后，出现如下界面</p>
+    <p><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="wps_clip_image-25544" src="../../images/installation/mobilephone/cocos2dx_android_install/201206272238189526.png" alt="wps_clip_image-25544" width="454" height="132" border="0" /></p>
+    <p>点击Yes按钮，重启Eclipse。</p>
+    <p>点击菜单window-&gt;preferences,进入如下界面：</p>
+    <p><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="wps_clip_image-24007" src="../../images/installation/mobilephone/cocos2dx_android_install/201206272238263482.png" alt="wps_clip_image-24007" width="493" height="441" border="0" /></p>
+    <p>选择你的android SDK解压后的目录(ADT 18 默认会扫描你的电脑，找到并配置好SDK位置)。</p>
+    <p>如果没安装好SDK的，也可以在eclipse中选择菜单 window-&gt;Android sdk and avd manager 出现如下界面：</p>
+    <p><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="wps_clip_image-30451" src="../../images/installation/mobilephone/cocos2dx_android_install/20120627223836918.png" alt="wps_clip_image-30451" width="557" height="394" border="0" /></p>
+    <p>也可以选择你需要的版本的sdk。</p>
+    <p>新建AVD(android vitural device)和上面一样，进入android sdk and avd manager,选中Vitural Devices 在点击New按钮 </p>
+    <p><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="wps_clip_image-19874" src="../../images/installation/mobilephone/cocos2dx_android_install/201206272238389688.png" alt="wps_clip_image-19874" width="555" height="393" border="0" /></p>
+    <p>点击New按钮后，进入如下界面:</p>
+    <p><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="wps_clip_image-31729" src="../../images/installation/mobilephone/cocos2dx_android_install/201206272238448396.png" alt="wps_clip_image-31729" width="337" height="570" border="0" /></p>
+    <p>名称可以随便取，target选择你需要的SDK版本，SD卡大小自定义,点击 Create AVD便成功创建。</p>
+    <p class="subject2">配置cygwin</p>
+    <p>在命令行中进入cygwin目录，并执行cygwin.bat，如果你不是用Administrator账号登录的系统，那么会在cygwin\home\文件夹中生成一个以你的登录名命名的新的文件夹。 </p>
+    <p>修改新生成文件夹中的&ldquo;.bash_profile &rdquo;文件，用UE或editplus等文本编辑器打开，在最后增加： （e/android-ndk-r8-windows/android-ndk-r8是安装ndk的路径）</p>
+    <p>NDK_ROOT=/cygdrive/e/android-ndk-r8-windows/android-ndk-r8</p>
+    <p>export NDK_ROOT </p>
+    <p>然后保存关闭。</p>
+    <p>&nbsp;</p>
+    <p>至此我们便基本搭建完毕cocos2d-x的windows 7 android 环境，下一节我们将开始创建cocos2d-x android平台的hello world工程。</p>
+    <p class="subject1">4. 创建Android工程</p>
+    <p>
+        <ul>
+        <li>修改Cocos2D安装目录下的“create-android-project.bat”文件。将_CYGBIN、_ANDROIDTOOLS、_NDKROOT三个分别设置成Cygwin的bin目录（c:\cygwin\bin）、Android SDK的tools目录（C:\Users\Andy\AppData\Local\Android\android-sdk\tools）、NDK根目录（E:\cocos2d-x\android-ndk-r8b）。</li>
+        <li>运行“create-android-project.bat”生成android工程，依次按要求输入，最终在Cocos2D的根目录下会产生所输入的项目名目录，例如“HelloWorld”。</li>
+        <li>用Cygwin客户端进入HelloWorld下的proj.android目录，运行build_native.sh，如果提示没有定义NDK_ROOT的话，可以在Windows的环境变量里面设置（网上有人说这里需要的是linux环境下的变量，在windows里面定义没用，事实是可以，试了一些其他的方法都没有用，可能和我下载都是最新版本的包有关系）。没有错误的话，最后剩下的就是用Eclipse编译Java部分的代码</li>
+        <li>Eclipse > File > New > Project > Android Project From Existing Code，选择HelloWorld下的proj.android路径。然后选择项目，选择Run As > Android Application。</li>
+        <li>如果有编译错误提示无法识别cocos2dx，可以Properties > Java Build path > Link Source，选择E:\cocos2d-x\cocos2d-2.0-x-2.0.4\cocos2dx\platform\android\java\src路径，Name不与src冲突即可。</li>
+        <li>运行成功的话弹出HelloWorld界面。我在模拟器运行一直出错，后来发现是模拟器不支持gles2.0导致的，用真机没有问题。</li>
+        </ul>
+    </p>
+    <p class="subject1">5. </p>
+    <p></p>
+    
+</div>
+
+</div>
+<!-- Content end -->
+
+</div>
+</body>
+</html>

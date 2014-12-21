@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Jining Park</title>
+    <link rel="stylesheet" type="text/css" href="../../styles/style_wiki.css" />
+</head>
+
+<body>
+<div class="main_body" align="center">
+
+<div class="wiki_title">
+    <h2>Cocos2d-x 开发 Windows 7 Android 平台环境搭建</h2>
+</div>
+
+<div class="wiki_content">
+    <h4>*参考</h4>
+    <p><li><a href="http://www.cnblogs.com/lhming/archive/2012/06/27/2566467.html">Cocos2d-x学习之创建Android工程和编译</a><span>日月之明</span></li></p>
+    <h4>使用eclipse编译cocos2d-x示例项目,创建cocos2d-x android项目并部署到真机</h4>
+    <p>准备</p>
+<p>今天将cocos2d-x的示例项目tests编译到android真机运行，以及如何创建cocos2d-x的android项目。</p>
+<p>打开cocos2d-x的tests项目，路径为:D:\cocos2d-x-2.0.1\tests</p>
+<p>下载：PdaNet：http://xiazai.zol.com.cn/detail/36/350633.shtml</p>
+<p>如果你的手机或者平板无法连上电脑,可以下载这个软件。</p>
+<p>第一步：编译cocos2d-x的示例项目</p>
+<p>首先用visual studio 打开 tests项目，看看项目结构</p>
+<p><a href="http://go.rritw.com/images.cnblogs.com/cnblogs_com/dekins/201208/201208240030429589.png"><img style="background-image: none; margin: 0px; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="clip_image001" src="http://images.cnblogs.com/cnblogs_com/dekins/201208/201208240030429589.png" alt="clip_image001" width="553" height="373" border="0" /></a></p>
+<p>classes下的tests文件夹就是官方的示例代码，里面包含很全的，可是学习的好途径。</p>
+<p><a href="http://go.rritw.com/images.cnblogs.com/cnblogs_com/dekins/201208/201208240030444308.png"><img style="background-image: none; margin: 0px; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="clip_image002" src="http://images.cnblogs.com/cnblogs_com/dekins/201208/201208240030444308.png" alt="clip_image002" width="553" height="373" border="0" /></a></p>
+<p>现在使用cygwin编译项目,使用管理员权限打开cmd-&gt;cygwin</p>
+<p>输入 cd /cygdrive/d/cocos2d-x-2.0.1/tests/proj.android 出现以下界面，然后使用ls列表文件目录</p>
+<p><a href="http://go.rritw.com/images.cnblogs.com/cnblogs_com/dekins/201208/201208240030466095.png"><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="clip_image003" src="http://images.cnblogs.com/cnblogs_com/dekins/201208/201208240030466095.png" alt="clip_image003" width="555" height="169" border="0" /></a></p>
+<p>使用文本编辑器打开build_native.sh，将NDK_ROOT_LOCAL变量和COCOS2DX_ROOT_LOCAL变量修改为当前</p>
+<p>NDK的根目录路径和cocos2d-x的根目录路径</p>
+<p><a href="http://go.rritw.com/images.cnblogs.com/cnblogs_com/dekins/201208/201208240030486454.png"><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="clip_image004" src="http://images.cnblogs.com/cnblogs_com/dekins/201208/201208240030486454.png" alt="clip_image004" width="553" height="373" border="0" /></a></p>
+<p>现在执行 ./build_native.sh 来编译项目，出现Permission denied ，这是由于win7系统下打开了UGA</p>
+<p>没有权限访问目录造成的</p>
+<p><a href="http://go.rritw.com/images.cnblogs.com/cnblogs_com/dekins/201208/201208240030509287.png"><img style="background-image: none; margin: 0px; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="clip_image005" src="http://images.cnblogs.com/cnblogs_com/dekins/201208/201208240030509287.png" alt="clip_image005" width="553" height="373" border="0" /></a></p>
+<p>现在我们给tests文件夹加载读写的权限，不过文件有点多，可以使用导入注册表来做个小工具，批量给文件夹</p>
+<p>赋予读取权限。</p>
+<p>Windows Registry Editor Version 5.00</p>
+<p>[HKEY_CLASSES_ROOT\*\shell\runas]</p>
+<p>@="管理员取得所有权"</p>
+<p>"NoWorkingDirectory"=""</p>
+<p>[HKEY_CLASSES_ROOT\*\shell\runas\command]</p>
+<p>@="cmd.exe /c takeown /f \"%1\" &amp;&amp; icacls \"%1\" /grant administrators:F"</p>
+<p>"IsolatedCommand"="cmd.exe /c takeown /f \"%1\" &amp;&amp; icacls \"%1\" /grant administrators:F"</p>
+<p>[HKEY_CLASSES_ROOT\exefile\shell\runas2]</p>
+<p>@="管理员取得所有权"</p>
+<p>"NoWorkingDirectory"=""</p>
+<p>[HKEY_CLASSES_ROOT\exefile\shell\runas2\command]</p>
+<p>@="cmd.exe /c takeown /f \"%1\" &amp;&amp; icacls \"%1\" /grant administrators:F"</p>
+<p>"IsolatedCommand"="cmd.exe /c takeown /f \"%1\" &amp;&amp; icacls \"%1\" /grant administrators:F"</p>
+<p>[HKEY_CLASSES_ROOT\Directory\shell\runas]</p>
+<p>@="管理员取得所有权"</p>
+<p>"NoWorkingDirectory"=""</p>
+<p>[HKEY_CLASSES_ROOT\Directory\shell\runas\command]</p>
+<p>@="cmd.exe /c takeown /f \"%1\" /r /d y &amp;&amp; icacls \"%1\" /grant administrators:F /t"</p>
+<p>"IsolatedCommand"="cmd.exe /c takeown /f \"%1\" /r /d y &amp;&amp; icacls \"%1\" /grant administrators:F /t"</p>
+<p>将上面的代码保存为reg文件，并点击导入到注册表</p>
+<p><a href="http://go.rritw.com/images.cnblogs.com/cnblogs_com/dekins/201208/201208240030571592.png"><img style="margin: 0px; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="clip_image006" src="http://images.cnblogs.com/cnblogs_com/dekins/201208/201208240030571592.png" alt="clip_image006" width="553" height="373" border="0" /></a></p>
+<p>现在使用这个小工具批量给tests文件夹赋予读写权限，在tests文件夹上面点击右键，选中 "管理员取得所有权" 执行批处理.</p>
+<p>再次执行编译项目，如果看到这样的界面说明编译成功了.</p>
+<p><a href="http://go.rritw.com/images.cnblogs.com/cnblogs_com/dekins/201208/20120824003104276.png"><img style="margin: 0px; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="clip_image007" src="http://images.cnblogs.com/cnblogs_com/dekins/201208/20120824003104276.png" alt="clip_image007" width="553" height="373" border="0" /></a></p>
+<p>导入tests项目，前面一章已经做过如何导入android项目，现在我们直接导入。</p>
+<p><a href="http://go.rritw.com/images.cnblogs.com/cnblogs_com/dekins/201208/201208240031065618.png"><img style="background-image: none; margin: 0px; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="clip_image008" src="http://images.cnblogs.com/cnblogs_com/dekins/201208/201208240031065618.png" alt="clip_image008" width="553" height="373" border="0" /></a></p>
+<p>android手机或者平板电脑，用usb连上电脑，记得在android系统里面打开开发调试选项和保持唤醒,</p>
+<p><a href="http://go.rritw.com/images.cnblogs.com/cnblogs_com/dekins/201208/201208240031084798.png"><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="clip_image009" src="http://images.cnblogs.com/cnblogs_com/dekins/201208/201208240031084798.png" alt="clip_image009" width="550" height="278" border="0" /></a></p>
+<p>现在使用eclipse将tests项目部署到真机，成功了.</p>
+<p><a href="http://go.rritw.com/images.cnblogs.com/cnblogs_com/dekins/201208/20120824003112846.png"><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="clip_image010" src="http://images.cnblogs.com/cnblogs_com/dekins/201208/20120824003112846.png" alt="clip_image010" width="552" height="323" border="0" /></a></p>
+<p>第二步：创建cocos2d-x的android项目</p>
+<p>打开cocos2d-x目录下的create-android-project.bat文件</p>
+<p>修改以下变量路径</p>
+<p>_CYGBIN 路径为 d:\cygwin\bin</p>
+<p>_ANDROIDTOOLS 为 d:\android-sdk-windows\tools</p>
+<p>_NDKROOT 为 d:\android-ndk-r8</p>
+<p><a href="http://go.rritw.com/images.cnblogs.com/cnblogs_com/dekins/201208/201208240031137334.png"><img style="background-image: none; margin: 0px; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="clip_image011" src="http://images.cnblogs.com/cnblogs_com/dekins/201208/201208240031137334.png" alt="clip_image011" width="553" height="373" border="0" /></a></p>
+<p>以管理员身份运行cmd，进入到cocos2d-x的目录，执行create-android-project.bat</p>
+<p><a href="http://go.rritw.com/images.cnblogs.com/cnblogs_com/dekins/201208/201208240031154595.png"><img style="background-image: none; margin: 0px; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="clip_image012" src="http://images.cnblogs.com/cnblogs_com/dekins/201208/201208240031154595.png" alt="clip_image012" width="553" height="373" border="0" /></a></p>
+<p>输入项目路径包名dekins.firstdemo</p>
+<p><a href="http://go.rritw.com/images.cnblogs.com/cnblogs_com/dekins/201208/201208240031172826.png"><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="clip_image013" src="http://images.cnblogs.com/cnblogs_com/dekins/201208/201208240031172826.png" alt="clip_image013" width="550" height="145" border="0" /></a></p>
+<p>输入项目名称 dekinsdemo</p>
+<p><a href="http://go.rritw.com/images.cnblogs.com/cnblogs_com/dekins/201208/201208240031184363.png"><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="clip_image014" src="http://images.cnblogs.com/cnblogs_com/dekins/201208/201208240031184363.png" alt="clip_image014" width="549" height="138" border="0" /></a></p>
+<p>输入android版本:10（对应android版本2.3.3）</p>
+<p><a href="http://go.rritw.com/images.cnblogs.com/cnblogs_com/dekins/201208/201208240031182379.png"><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="clip_image015" src="http://images.cnblogs.com/cnblogs_com/dekins/201208/201208240031182379.png" alt="clip_image015" width="547" height="180" border="0" /></a></p>
+<p>成功后会在cocos2d-x的项目下创建dekinsdemo目录</p>
+<p><a href="http://go.rritw.com/images.cnblogs.com/cnblogs_com/dekins/201208/201208240031192595.png"><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="clip_image016" src="http://images.cnblogs.com/cnblogs_com/dekins/201208/201208240031192595.png" alt="clip_image016" width="547" height="316" border="0" /></a></p>
+<p>看下生成的项目结构:</p>
+<p>Classes为项目的类代码</p>
+<p>proj.android为eclipse的项目文件</p>
+<p>Resources为项目的资源文件</p>
+<p><a href="http://go.rritw.com/images.cnblogs.com/cnblogs_com/dekins/201208/201208240031216475.png"><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="clip_image017" src="http://images.cnblogs.com/cnblogs_com/dekins/201208/201208240031216475.png" alt="clip_image017" width="553" height="373" border="0" /></a></p>
+<p>注意如果项目包名和项目名称一样的话会出proj.android项目没有jni目录，解决办法：</p>
+<p>在proj.android目录手动建一个jni目录，并把helloworld文件夹</p>
+<p>Android.mk,Application.mk,list.sh移动到jni目录下。</p>
+<p><a href="http://go.rritw.com/images.cnblogs.com/cnblogs_com/dekins/201208/201208240031249243.png"><img style="background-image: none; margin: 0px; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="clip_image018" src="http://images.cnblogs.com/cnblogs_com/dekins/201208/201208240031249243.png" alt="clip_image018" width="553" height="373" border="0" /></a></p>
+<p>现在使用cygwin编译这个项目,别忘了右键点击dekinsdemo选择"管理员取得所有权"</p>
+<p>使用cygwin执行build_native.sh命令</p>
+<p>出现成功界面</p>
+<p><a href="http://go.rritw.com/images.cnblogs.com/cnblogs_com/dekins/201208/201208240031255490.png"><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="clip_image019" src="http://images.cnblogs.com/cnblogs_com/dekins/201208/201208240031255490.png" alt="clip_image019" width="558" height="139" border="0" /></a></p>
+<p>现在把刚建好的android项目导入到eclipse中，并部署到真机，成功了.</p>
+<p><a href="http://go.rritw.com/images.cnblogs.com/cnblogs_com/dekins/201208/201208240031294047.png"><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="clip_image020" src="http://images.cnblogs.com/cnblogs_com/dekins/201208/201208240031294047.png" alt="clip_image020" width="561" height="326" border="0" /></a></p>
+
+</div>
+
+</div>
+<!-- Content end -->
+
+</div>
+</body>
+</html>

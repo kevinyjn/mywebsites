@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Jining Park</title>
+    <link rel="stylesheet" type="text/css" href="../../styles/style_wiki.css" />
+</head>
+
+<body>
+<div class="main_body" align="center">
+    
+<div class="wiki_title">
+    <h2>多系统安装之用 Windows 引导 Linux</h2>
+</div>
+
+<div class="wiki_content">
+    <h4>Windows 引导 Ubuntu</h4>
+    <p class="subject2">1. 先安装Windows，再安装Ubuntu，方法略。</p>
+    <p class="subject2">2. 启动Linux系统，提取Linux系统中的GRUB引导扇区，运行如下命令：</p>
+    <p>如果安装时默认用ubuntu引导，则通常使用如下命令：</p>
+    <pre>sudo dd if=/dev/sda of=/media/linux.mbr bs=512 count=1</pre>
+    <p>如果被识别为IDE盘</p>
+    <pre>sudo dd if=/dev/hda6 of=/media/linux.mbr bs=512 count=1</pre>
+    <p>如果被识别为SDA盘</p>
+    <pre>sudo dd if=/dev/sda6 of=/media/linux.mbr bs=512 count=1</pre>
+    <p>在linux下，hd1～hd4代表主分区，对应于windows下就是C盘，hd5开始为扩展分区，如hd5对应D盘(如果D盘被分为逻辑分区的话)，hd6对应E盘等。</p>
+    <p>grub的分区算法和linux类似，但有一个差别 是，它是从0开始计数的，也就是说0～3对应主分区，4对应扩展分区的第一个分区，以此类推。</p>
+    <p class="subject2">3. 完成之后把提取的Linux.mbr文件备份到Windows分区下。</p>
+    <p>重启进入Win7系统，把Linux.mbr文件复制到C盘目录下，增加BCD菜单，菜单项使用Linux.mbr文件引导。(BCD的操作方法见BCD编辑方法)</p>
+    <p class="subject2">4. 可以删除grub引导</p>
+    <p>如果增加的Linux启动项可以启动，再次启动win7系统，卸载GURB引导，在命令提示符中输入<pre>C:\boot\bootsect.exe /nt60 C:</pre></p>
+    
+    <h4>BCD 启动菜单编辑方法</h4>
+    <p class="subject2">1. 以管理员身份运行cmd.exe</p>
+    <p class="subject2">2. 查看当前bcd启动项目，输入<code>bcdedit</code>回车即可。</p>
+    <p class="subject2">3. 设置启动菜单项目，依次输入如下命令：</p>
+    <p>已增加Grub4dos启动菜单为例(如grub引导放在\NtBoot下)</p>
+    <pre>bcdedit /create /d "grub4dos" /application bootsector
+        <code>// 回车后会显示一串标识符，把这串标识符复制出来，填充一下命令的标识符。</code>
+        <code>// 注意：这里不能是/application osloader</code>
+bcdedit /set {标识符} device partition=c:
+bcdedit /set {标识符} path \NTBoot\grldr.mbr
+bcdedit /displayorder {标识符} /addlast</pre>
+    <p>以增加Linux(Ubuntu)启动菜单为例：</p>
+    <pre>bcdedit /create /d "ubuntu" /application bootsector
+bcdedit /set {id} device partition=c:
+bcdedit /set {id} path \NTBoot\ubuntu.mbr
+bcdedit /displayorder {id} /addlast</pre>
+    <p>以增加变色龙启动菜单为例：</p>
+    <pre>bcdedit /create /d "Chameleon" /application bootsector
+bcdedit /set {id} device boot
+bcdedit /set {id} path \Avldr.bin
+bcdedit /displayorder {id} /addlast</pre>
+    <p>其中，变色龙Avldr.bin会启动同目录下的"Avlgo.sys"文件，Avlgo.sys会引导从其所指向的wowpc.iso文件，这个文件才是变色龙程序。当然，变色龙启动目录应在主分区。由于Windows7下hd(00)分区时boot分区，不可见，自己手动增加的变色龙引导菜单容易出现无法加载分区的错误，我们最好选择引导到hd(01)的分区，手中备份的MacWowpc变色龙引导程序下有Avlgo-hd(00)~Avlgo-hd(03)四个目录，每个目录下都有一个Avlgo.sys文件，各只向对应的分区，我们选择hd1,然后把wowpc.iso放在hd1分跟目录下(通常情况下就是C盘)。</p>
+    <p>其他，如设置启动菜单语言</p>
+    <pre>bcdedit /set {bootmgr} locale zh-CN
+bcdedit /set {bootmgr} locale en-US</pre>
+</div>
+
+</div>
+<!-- Content end -->
+
+</div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Jining Park</title>
+    <link rel="stylesheet" type="text/css" href="../../styles/style_wiki.css" />
+</head>
+
+<body>
+<div class="main_body" align="center">
+    
+<div class="wiki_title">
+    <h2>Windows</h2>
+
+</div>
+
+<div class="wiki_content">
+    <h4>About Windows</h4>
+    <p class="subject1">Windows 7 的启动过程</p>
+    <p>BIOS–>MBR–> Bootmgr–>BCD–>Winload.exe–>内核加载</p>
+    <ul><li>1) 、开机后，BIOS进行开机自检(POST)，然后选择从硬盘进行启动，加载硬盘的MBR并把控制权交给MBR(MBR是硬盘的第一个扇区，它不在任何一个分区内);</li>
+    <li>2) 、MBR会搜索64B大小的分区表，找到4个主分区(可能没有4个)的活动分区并确认其他主分区都不是活动的，然后加载活动分区的第一个扇区(Bootmgr)到内存;</li>
+    <li>3) 、Bootmgr寻找并读取BCD，如果有多个启动选项，会将这些启动选项反映在屏幕上，由用户选择从哪个启动项启动。</li>
+    <li>4) 、选择从Windows 7启动后，会加载C:\windows\system32\winload.exe，并开始内核的加载过程，内核加载过程比较长，比较复杂，这里就不一一讲了。</li>
+    </ul>
+    <p>在这个过程中，bootmgr和BCD存放在Windows 7的隐藏分区里，而从Winload.exe开始，就开始进入到C盘执行内核的加载过程了。</p>
+    
+</div>
+
+</div>
+<!-- Content end -->
+
+</div>
+</body>
+</html>

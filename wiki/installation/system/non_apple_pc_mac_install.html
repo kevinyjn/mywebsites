@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Jining Park</title>
+    <link rel="stylesheet" type="text/css" href="../../styles/style_wiki.css" />
+</head>
+
+<body>
+<div class="main_body" align="center">
+    
+<div class="wiki_title">
+    <h2>Non-Apple PC Install Mac OS X</h2>
+
+</div>
+
+<div class="wiki_content">
+    <h4>Install Mac Prepare No.1: Get DSDT.aml</h4>
+    <p>提取DSDT.dsl，然后用ACPI Patcher 的 D/C DSDT 功能编译成dsdt.aml</p>
+    <ul>
+    <li>方法1：从Everest程序中提取DSDT，在Everest程序的底部状态栏右击选择提取DSDT，生成acpi_dsdt.bin，然后用ACPI Patcher制作成DSDT.dsl</li>
+    <li>方法2：Patcher02Beta5 工具下有IASL程序，在cmd命令下直接 iasl -g 提取DSDT.dsl</li>
+    </ul>
+    <h4>Install Mac Prepare No.2: /Extra/Extentions Drivers</h4>
+    <ul>
+    <li>/Extra/Extensions 下必须有 FakeSMC.kext 驱动</li>
+    <li>最好加上 ElliottForceLegacyRTC.kext，防止刷BIOS</li>
+    <li>NullCPUPowerManagement.kext</li>
+    <li>AppleACPIPS2Nub.kext ApplePS2Controller.kext</li>
+    </ul>
+    <h4>Install Mac Prepare No.3: /Extra/org.chameleon.Boot.plist</h4>
+    <h4>Install Mac Prepare No.4: /Extra/dsdt.aml</h4>
+    <h4>Install Mac Prepare No.5: /Extra/smbios.plist</h4>
+    <h4>Install Mac</h4>
+    <p>安装过程中最好加-v -f 参数，根据<code>Reference</code>中新手常见(五国)(-v图)错误解决 解决安装中遇到的错误。</p>
+
+    <h4>Reference</h4>
+	<ul>
+    <li><a href="http://bbs.pcbeta.com/viewthread-893935-1-1.html" target="_blank">OS X Lion向导贴大集合，全面搜罗Lion重要内容，新人必看</a></li>
+    <li><a href="http://bbs.pcbeta.com/viewthread-863656-1-1.html" target="_blank">新手常见(五国)(-v图)错误解决(原版,破解kernel,补丁kext下载)</a></li>
+    <li><a href="http://bbs.pcbeta.com/viewthread-798366-1-1.html" target="_blank">[教程]【變色龍系列二】com.apple.Boot.plist + SMBIOS.plist 設定說明</a></li>
+    <li><a href="http://bbs.pcbeta.com/viewthread-970534-1-1.html" target="_blank">授之以渔贴[Mac教程的教程]，MAC Lion安装的方法论</a></li>
+    <li><a href="http://bbs.pcbeta.com/forum-lion-1.html" target="_blank">Mac OS X Lion 论坛</a></li>
+    <li><a href="http://bbs.pcbeta.com/viewthread-484842-1-6.html" target="_blank">威廉第三的MAC系列教程（一） ——使用ACPI Patcher制作DSDT补丁</a></li>
+    <li><a href="http://bbs.pcbeta.com/forum.php?mod=viewthread&tid=1034977" target="_blank">Win系统下制作dsdt驱动万能声卡的方法</a></li>
+    <li><a href="http://bbs.pcbeta.com/viewthread-936953-1-1.html" target="_blank">教程一枚：如何安装kext&如何修改org.chameleon.boot.plist和smbios.plist</a></li>
+    <li><a href="http://bbs.pcbeta.com/viewthread-929300-1-1.html" target="_blank">Chameleon_2.2svn_r2140 变色龙全功能支持10.8+中文说明+SMBios版+ATI专用780版</a></li>
+    <li><a href="https://github.com/mdlawson/vaiobook" target="_blank">https://github.com/mdlawson/vaiobook</a></li>
+	</ul>
+</div>
+
+</div>
+<!-- Content end -->
+
+</div>
+</body>
+</html>

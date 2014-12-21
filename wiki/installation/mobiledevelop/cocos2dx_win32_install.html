@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Jining Park</title>
+    <link rel="stylesheet" type="text/css" href="../../styles/style_wiki.css" />
+</head>
+
+<body>
+<div class="main_body" align="center">
+
+<div class="wiki_title">
+    <h2>Cocos2d-x 开发 win32 平台安装与配置</h2>
+</div>
+<div class="wiki_content">
+    <span>本说明以 cocos2d-x 2.0.3 版本为例。</span>
+    <p>
+&nbsp;&nbsp;&nbsp;&nbsp;通常要创建一个win32 <a href="">cocos2d-x</a> 工程需要在 cocos2d-x 路径下创建，否则找不到所需 cocos2d-x 的头文件和库。
+这样一来，要么每创建一个工程都需要拷贝整个cocos2d-x库，要么需要在一个cocos2d-x目录下创建多个工程，会越磊越多，
+而且跨平台移植时也不方便。现通过以下方法设置 visual studio 模版，可以方便在任何路径创建 cocos2d-x 工程，不必拷贝文件。
+    </p>
+    <h4>1. 设置环境变量 COCOS2DX_HOME=D:\cocos2d-x</h4>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;cocos2d-x 路径根据实际自己 cocos2dx 路径修改。</p>
+    <p>
+&nbsp;&nbsp;&nbsp;&nbsp;修改 Path，在后面加上 D:\cocos2d-x\Debug.win32 就是执行 D:\cocos2d-x\build-win32.bat 所生成的库目录，主要是为了dll，因为搜索DLL的路径顺序是 <br />
+&nbsp;&nbsp;&nbsp;&nbsp;1：被装载程序包的执行目录。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;2：当前目录。如果与执行目录不同的话。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;3：Windows系统目录。 <br />
+&nbsp;&nbsp;&nbsp;&nbsp;4：Windows目录。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;5：Path中的目录。<br />
+所以我们加在了Path里。
+    </p>
+    <h4>2. 修改vc模板生成脚本 default.js（D:\cocos2d-x\template\msvc\CCAppWiz.win32\Scripts\1033\）</h4>
+    <p>
+&nbsp;&nbsp;&nbsp;&nbsp; 修改函数 AddConfigurations (<code>COCOS2DX_HOME</code> 为修改部分，若环境变量 <code>COCOS2DX_HOME</code> 的路径末尾没有加\，则下面的<code>\\</code>也应该加上):
+    </p>
+    <pre>
+            // Additional Inlcude Directories
+            var strAddIncludeDir = '.;..\\Classes';
+            strAddIncludeDir += ';$(<code>COCOS2DX_HOME</code>)<code>\\</code>cocos2dx';
+            strAddIncludeDir += ';$(<code>COCOS2DX_HOME</code>)<code>\\</code>cocos2dx\\include';
+            strAddIncludeDir += ';$(<code>COCOS2DX_HOME</code>)<code>\\</code>cocos2dx\\kazmath\\include';
+            strAddIncludeDir += ';$(<code>COCOS2DX_HOME</code>)<code>\\</code>cocos2dx\\platform\\win32';
+            strAddIncludeDir += ';$(<code>COCOS2DX_HOME</code>)<code>\\</code>cocos2dx\\platform\\third_party\\win32';
+            strAddIncludeDir += ';$(<code>COCOS2DX_HOME</code>)<code>\\</code>cocos2dx\\platform\\third_party\\win32\\OGLES';
+            strAddIncludeDir += ';$(<code>COCOS2DX_HOME</code>)<code>\\</code>extensions';
+            
+            if (wizard.FindSymbol('CC_USE_BOX2D')) {
+                strAddIncludeDir += ';$(<code>COCOS2DX_HOME</code>)<code>\\</code>external';
+            }
+            if (wizard.FindSymbol('CC_USE_CHIPMUNK')) {
+                strAddIncludeDir += ';$(<code>COCOS2DX_HOME</code>)<code>\\</code>external\\chipmunk\\include\\chipmunk';
+            }
+            if (wizard.FindSymbol('CC_USE_COCOS_DENSHION_SIMPLE_AUDIO_ENGINE')) {
+                strAddIncludeDir += ';$(<code>COCOS2DX_HOME</code>)<code>\\</code>CocosDenshion\\include';
+            }
+            if (wizard.FindSymbol('CC_USE_LUA')) {
+                strAddIncludeDir += ';$(<code>COCOS2DX_HOME</code>)<code>\\</code>scripting\\lua\\cocos2dx_support';
+                strAddIncludeDir += ';$(<code>COCOS2DX_HOME</code>)<code>\\</code>scripting\\lua\\tolua';
+                strAddIncludeDir += ';$(<code>COCOS2DX_HOME</code>)<code>\\</code>scripting\\lua\\lua';
+            }
+            CLTool.AdditionalIncludeDirectories = strAddIncludeDir;
+    </pre>
+    <p>
+&nbsp;&nbsp;&nbsp;&nbsp;继续这个函数里往下找到 <code>// Additional Library Directories</code> 的地方，如下：
+    </p>
+    <pre>
+            // Additional Library Directories
+            var strAddDepends = 'libcocos2d.lib libExtensions.lib opengl32.lib glew32.lib';
+            if (wizard.FindSymbol('CC_USE_BOX2D')) {
+                strAddDepends += ' libBox2d.lib';
+            }
+            if (wizard.FindSymbol('CC_USE_CHIPMUNK')) {
+                strAddDepends += ' libchipmunk.lib';
+            }
+            if (wizard.FindSymbol('CC_USE_COCOS_DENSHION_SIMPLE_AUDIO_ENGINE')) {
+                strAddDepends += ' libCocosDenshion.lib';
+            }
+            if (wizard.FindSymbol('CC_USE_LUA')) {
+                strAddDepends += ' liblua.lib';
+            }
+            LinkTool.AdditionalLibraryDirectories = '$(OutDir)';
+            LinkTool.AdditionalDependencies = strAddDepends;
+    </pre>
+    <p>
+&nbsp;&nbsp;&nbsp;&nbsp;将 <code>LinkTool.AdditionalLibraryDirectories = '$(OutDir)';</code> 注释掉或删除，修改为以下部分(有颜色标记的代码为修改后的部分)：
+    </p>
+    <pre>
+            // Additional Library Directories
+            var strAddDepends = 'libcocos2d.lib libExtensions.lib opengl32.lib glew32.lib';
+            if (wizard.FindSymbol('CC_USE_BOX2D')) {
+                strAddDepends += ' libBox2d.lib';
+            }
+            if (wizard.FindSymbol('CC_USE_CHIPMUNK')) {
+                strAddDepends += ' libchipmunk.lib';
+            }
+            if (wizard.FindSymbol('CC_USE_COCOS_DENSHION_SIMPLE_AUDIO_ENGINE')) {
+                strAddDepends += ' libCocosDenshion.lib';
+            }
+            if (wizard.FindSymbol('CC_USE_LUA')) {
+                strAddDepends += ' liblua.lib';
+            }
+            <code>// LinkTool.AdditionalLibraryDirectories = '$(OutDir)';</code>
+            <code>if (bDebug)</code>
+                <code>LinkTool.AdditionalLibraryDirectories = '$(COCOS2DX_HOME)\\Debug.win32';</code>
+            <code>else</code>
+                <code>LinkTool.AdditionalLibraryDirectories = '$(COCOS2DX_HOME)\\Release.win32';</code>
+            LinkTool.AdditionalDependencies = strAddDepends;
+    </pre>
+    
+    <p>保存，执行 InstallWizardForVS2010.js 生成新脚本。注销重新登录，使环境变量生效。</p>
+    <p>打开VC，重新生成工程，指定任意目录，运行，OK。</p>
+    
+    <h4>若调试时发现“无法定位程序输入点gzdirect于动态链接库zlib1.dll”时，采取如下解决方案：</h4>
+    <p>1. 将 C:\Windows\System32 (win64位系统为 C:\Windows\SysWOW64) 中的 zlib1.dll 重命名 zlib1.dll.off 或 zlib1.dll.old 等任意名字，或者直接删除，再启动调试。当然，这种方法不是万全之策，因为这可能导致其他程序无法正常启动。</p>
+    <p>2. 在<a href="http://www.gtk.org/download/win32.php">GTK+下载页</a>下载最新版的 zlib 运行时 <a href="http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/zlib_1.2.5-2_win32.zip">zlib_1.2.5-2_win32.zip</a>，(64位系统有<a href="http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/zlib_1.2.5-1_win64.zip">zlib_1.2.5-1_win64.zip</a>，但供 cocos2dx 使用时不要用，用32位的)将其中 bin 文件夹中的 zlib1.dll 复制到 C:\Windows\System32 中(win64位系统为 C:\Windows\SysWOW64)，</p>
+
+</div>
+
+</div>
+<!-- Content end -->
+
+</div>
+</body>
+</html>

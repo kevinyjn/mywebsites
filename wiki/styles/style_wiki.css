@@ -1,0 +1,182 @@
+@charset "utf-8";
+/* CSS Document */
+
+/* 主体区域 */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background:#666666 bottom center no-repeat;
+    background-repeat: no-repeat;
+    background-position: top, center;
+}
+
+.main_body {
+    width:100%;
+    margin:0 auto;
+    z-index:-1;
+}
+
+.main_content {
+    width:100%;
+    margin:0 auto;
+    border:0px;
+    z-index:-1;
+}
+
+table {
+    border: none hidden;
+    border:0px;
+    padding:0px;
+    margin:0px;
+    margin-top:0px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+a {
+    color:#000000;
+    font:Arial, Helvetica, sans-serif;
+    font-family:Arial, Helvetica, sans-serif;
+    font-style:normal;
+}
+
+.wiki_title {
+    height:32px;
+    text-align:left;
+    font-size:18px;
+    font-style:bold;
+    color:#fff;
+    position:inherit;
+    /* IE kernel gradientType: 0: virtical 1:horizontal */
+    FILTER:progid:DXImageTransform.Microsoft.Gradient(gradientType=1,startColorStr=#333333, endColorStr=#666666);
+    background:-moz-linear-gradient(left,#333333,#666666);
+    /* webkit kernel safari|Chrome (type, x1 y1, x2, y2) x1,x2 left(or 0%) or right(100%); y1, y2 top(or 0%) or bottom(or 100%) */
+    background:-webkit-gradient(linear, 0% 0%, 100% 0%, from(#333333), to(#666666));
+}
+.wiki_title h2 {
+    color:#0ff;
+    text-align:center;
+	font-size:24px;
+	font-family:Arial;
+	float:center;
+	display:inline;
+}
+.wiki_title h3 {
+    color:#0ff;
+    text-align:left;
+	font-size:18px;
+	font-family:Arial;
+	float:center;
+	display:inline;
+}
+
+.wiki_content {
+    text-align:left;
+    font-size:16px;
+}
+.wiki_content p {
+    padding-left:32px;
+}
+.wiki_content p.subject1 {
+    padding-left:0px;
+}
+.wiki_content p.subject2 {
+    padding-left:16px;
+}
+.wiki_content ul {
+    padding:0px 0px 0px 48px;
+    margin:0px;
+    list-style-type:disc;
+}
+.wiki_content li {
+    text-align: left;
+    margin: 0px;
+    padding:0px;
+}
+
+.wiki_subject_list ul {
+    padding:8px 0px 8px 8px;
+    margin:0px;
+    list-style-type:disc;
+}
+.wiki_subject_list li {
+    text-align:left;
+    padding:0px;
+}
+
+.wiki_detail_list ul {
+    padding:8px 0px 8px 8px;
+    margin:0px;
+    list-style-type:square;
+}
+.wiki_detail_list li {
+    text-align:left;
+    padding:0px;
+}
+
+.column_display {
+    width:328px;
+    display:inline-table;
+    position:inherit;
+    vertical-align:top;
+    text-align:left;
+    margin:0px;
+    padding:0px;
+    padding-right:10px;
+    text-indent:0px;
+    font-style:normal;
+}
+.column_display span {
+    font-size:14px;
+    text-align:left;
+    margin-left:8px;
+    color:#333333;
+}
+.column_display h3 {
+    text-align:left;
+    font-size:18px;
+    font-style:bold;
+    color:#CCC;
+    position:inherit;
+    /* IE kernel gradientType: 0: virtical 1:horizontal */
+    FILTER:progid:DXImageTransform.Microsoft.Gradient(gradientType=1,startColorStr=#333333,endColorStr=#666666);
+    background:-moz-linear-gradient(left,#333333,#666666);
+    /* webkit kernel safari|Chrome (type, x1 y1, x2, y2) x1,x2 left(or 0%) or right(100%); y1, y2 top(or 0%) or bottom(or 100%) */
+    background:-webkit-gradient(linear, 0% 0%, 100% 0%, from(#333333), to(#666666));
+}
+.column_display ul {
+    clear:both;
+    padding:0px;
+    margin:0px;
+    list-style-type:disc;
+}
+.column_display li {
+    width: 100%;
+    text-align: left;
+    margin: 0px;
+    padding:0px;
+    list-style-position:inside;
+}
+.column_display li:hover {
+    background: #999;
+}
+
+pre {
+	background:#111;
+	border:1px dashed #ccc;
+    /*    top right bottom left */
+	padding:8px 12px 8px 0px;
+	margin:5px 0;
+	color:#eee;
+    font-size:15px;
+    
+	white-space: pre-wrap;       /* css-3 */
+	white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+	white-space: -pre-wrap;      /* Opera 4-6 */
+	white-space: -o-pre-wrap;    /* Opera 7 */
+	word-wrap: break-word;       /* Internet Exp lorer 5.5+ */
+}
+
+code {
+    background: #ae0;
+    color: #00f;
+}
